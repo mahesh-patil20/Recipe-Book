@@ -4,7 +4,7 @@ const router = express.Router();
 const { getRecipes, addRecipe, deleteRecipe, getRecipe, updateRecipe, getUserRecipes } = require('../controllers/recipeController');
 // const UserModel = require("../models/users");
 
-router.get('/', getRecipes);
+router.post('/', getRecipes);
 router.post('/userrecipes', getUserRecipes);
 router.post('/add', addRecipe);
 router.post('/get/:id', getRecipe);
