@@ -1,3 +1,4 @@
+const Fuse = require('fuse.js');
 const mongoose = require('mongoose');
 
 const recipeModel = require('../models/recipe');
@@ -50,7 +51,7 @@ const updateRecipe = async (req, res) => {
         console.log("Inside updateRecipe")
         // console.log("Req Body is : ", req.body);
         const filter = { _id: req.body._id };
-        const update = { title: req.body.title, description: req.body.description, ingredients: req.body.ingredients, instructions: req.body.instructions };
+        const update = { title: req.body.title, description: req.body.description, ingredients: req.body.ingredients, instructions: req.body.instructions, tips: req.body.tips, youtubeLink: req.body.youtubeLink };
         const newRecipe = await recipeModel.findOneAndUpdate(filter, update, {
             new: true
         });
@@ -77,6 +78,23 @@ const deleteRecipe = async (req, res) => {
     }
 }
 
+const searchRecipes = async (req, res) => {
+    try {
+        console.log("Inside searchRecipes")
+        const searchQuery = req.body.search;
+        console.log("Search Query is : ", searchQuery);
+        const recipes = await recipeModel.find({});
+        const options = {
+            keys: ['title'], // Search for the 'title' property
+            threshold: 0.3, // Adjust the search threshold (0 to 1, lower values are more permissive)
+        };
+        const fuse = new Fuse(recipes, options);
+        const searchResults = fuse.search(searchQuery);
+        res.json(searchResults);
+    } catch (error) {
+        res.status(500).json({ message: "Server Error in searchRecipes" });
+    }
+}
 
 
 module.exports = {
@@ -85,5 +103,6 @@ module.exports = {
     addRecipe,
     getRecipe,
     deleteRecipe,
-    updateRecipe
+    updateRecipe,
+    searchRecipes
 }

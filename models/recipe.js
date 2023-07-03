@@ -23,6 +23,9 @@ const recipeSchema = new mongoose.Schema({
     youtubeLink: {
         type: String,
     },
+    tips: {
+        type: String,
+    },
     userOwner: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
